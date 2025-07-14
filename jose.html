@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Malla Curricular Interactiva - JG</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --color-approved: #4CAF50;
+            --color-failed: #F44336;
+            --color-pending: #78909C;
+            --color-background: #f5f5f5;
+            --color-card: #FFFFFF;
+            --color-primary: #2196F3;
+            --color-primary-dark: #1976D2;
+            --color-text: #333333;
+            --color-border: #e0e0e0;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-hover: 0 6px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+            color: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+        }
+
+        header h1 {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        header h1 i {
+            font-size: 1.2em;
+        }
+
+        .login-section {
+            background: var(--color-card);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            max-width: 500px;
+            margin: 0 auto 30px;
+            text-align: center;
+        }
+
+        .login-section h2 {
+            margin-bottom: 20px;
+            color: var(--color-primary);
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--color-text);
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--color-border);
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .input-group input:focus {
+            border-color: var(--color-primary);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+        }
+
+        .btn {
+            background-color: var(--color-primary);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            background-color: var(--color-primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .btn i {
+            font-size: 1.1em;
+        }
+
+        .info-text {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .malla-section {
+            display: none;
+        }
+
+        .user-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            background: var(--color-card);
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+
+        .user-info .user-details {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-info .user-details i {
+            font-size: 1.5em;
+            color: var(--color-primary);
+        }
+
+        .semesters-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .semester {
+            background: var(--color-card);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .semester-header {
+            background: linear-gradient(to right, var(--color-primary), var(--color-primary-dark));
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .course-card {
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border-top: 4px solid transparent;
+        }
+
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .course-card.pending {
+            background-color: var(--color-pending);
+            color: white;
+        }
+
+        .course-card.approved {
+            background-color: var(--color-approved);
+            color: white;
+        }
+
+        .course-card.failed {
+            background-color: var(--color-failed);
+            color: white;
+        }
+
+        .course-card h3 {
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+
+        .course-code {
+            font-size: 0.9em;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        .course-state {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            margin-top: 10px;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            border-radius: 20px;
+            background: var(--color-card);
+            box-shadow: var(--shadow);
+        }
+
+        .color-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+        }
+
+        .color-dot.pending { background-color: var(--color-pending); }
+        .color-dot.approved { background-color: var(--color-approved); }
+        .color-dot.failed { background-color: var(--color-failed); }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .instructions {
+            background: var(--color-card);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            box-shadow: var(--shadow);
+        }
+
+        .instructions h3 {
+            margin-bottom: 10px;
+            color: var(--color-primary);
+        }
+
+        .instructions ul {
+            padding-left: 20px;
+            margin-top: 10px;
+        }
+
+        .instructions li {
+            margin-bottom: 8px;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .courses-grid {
+                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            }
+            
+            .user-info {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            
+            .legend {
+                gap: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-section {
+                padding: 20px;
+            }
+            
+            .courses-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .semester-header {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-graduation-cap"></i> Malla Curricular Interactiva</h1>
+            <p>Visualiza y gestiona tu progreso académico</p>
+        </header>
+        
+        <section class="login-section" id="login-section">
+            <h2><i class="fas fa-user-graduate"></i> Ingresa tu RU</h2>
+            <div class="input-group">
+                <label for="ru-input">Registro Universitario (RU):</label>
+                <input type="text" id="ru-input" placeholder="Ej: 20210423" maxlength="8">
+            </div>
+            <button class="btn" id="login-btn">
+                <i class="fas fa-sign-in-alt"></i> Acceder a mi Malla
+            </button>
+            <p class="info-text">
+                <i class="fas fa-info-circle"></i> El RU es tu número de registro universitario.
+                Los datos se guardarán localmente en tu navegador.
+            </p>
+        </section>
+        
+        <section class="malla-section" id="malla-section">
+            <div class="user-info">
+                <div class="user-details">
+                    <i class="fas fa-user"></i>
+                    <div>
+                        <h3>Estudiante: <span id="current-user">Usuario</span></h3>
+                        <p>RU: <span id="current-ru">20210000</span></p>
+                    </div>
+                </div>
+                <button class="btn" id="change-user">
+                    <i class="fas fa-exchange-alt"></i> Cambiar Usuario
+                </button>
+            </div>
+            
+            <div class="instructions">
+                <h3><i class="fas fa-lightbulb"></i> Instrucciones de uso</h3>
+                <ul>
+                    <li><strong>Haz clic en cada materia</strong> para cambiar su estado: Pendiente → Aprobada → Aplazada</li>
+                    <li>Los colores indican el estado de cada materia</li>
+                    <li>Tu progreso se guarda automáticamente y estará disponible en futuras visitas</li>
+                </ul>
+            </div>
+            
+            <div class="semesters-container" id="malla-container">
+                <!-- La malla curricular se generará dinámicamente aquí -->
+            </div>
+            
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="color-dot pending"></div>
+                    <span>Pendiente</span>
+                </div>
+                <div class="legend-item">
+                    <div class="color-dot approved"></div>
+                    <span>Aprobada</span>
+                </div>
+                <div class="legend-item">
+                    <div class="color-dot failed"></div>
+                    <span>Aplazada</span>
+                </div>
+            </div>
+        </section>
+        
+        <footer>
+            <p>Desarrollado por JG | Malla Curricular Interactiva &copy; 2023</p>
+        </footer>
+    </div>
+    
+    <script>
+        // Datos de la malla curricular (simulando un archivo materias.json)
+        const materiasData = {
+            "carrera": "Plan 122-3",
+            "semestres": [
+                {
+                    "numero": 1,
+                    "cursos": [
+                        {"codigo": "S1-01", "nombre": "QUIMICA GENERAL"},
+                        {"codigo": "S1-02", "nombre": "FISICA BASICA I"},
+                        {"codigo": "S1-03", "nombre": "DIBUJO TECNICO I"},
+                        {"codigo": "S1-04", "nombre": "CALCULO I"},
+                        {"codigo": "S1-05", "nombre": "ALGEBRA I"}
+                    ]
+                },
+                {
+                    "numero": 2,
+                    "cursos": [
+                        {"codigo": "S2-01", "nombre": "QUIMICA ORGANICA", "requisitos": ["S1-01"]},
+                        {"codigo": "S2-02", "nombre": "FISICA BASICA II", "requisitos": ["S1-04", "S1-02"]},
+                        {"codigo": "S2-03", "nombre": "INFORMATICA I", "requisitos": ["S1-03"]},
+                        {"codigo": "S2-04", "nombre": "CALCULO II", "requisitos": ["S1-04"]},
+                        {"codigo": "S2-05", "nombre": "ALGEBRA II", "requisitos": ["S1-05"]},
+                        {"codigo": "S2-06", "nombre": "ECONOMIA GENERAL", "requisitos": ["S1-05"]}
+                    ]
+                },
+                {
+                    "numero": 3,
+                    "cursos": [
+                        {"codigo": "S3-01", "nombre": "FISICOQUIMICA", "requisitos": ["S2-01", "S2-02"]},
+                        {"codigo": "S3-02", "nombre": "FISICA BASICA III", "requisitos": ["S2-02", "S2-04"]},
+                        {"codigo": "S3-03", "nombre": "CIENCIAS DE LOS MATERIALES", "requisitos": ["S2-03"]},
+                        {"codigo": "S3-04", "nombre": "ECUACIONES DIFERENCIALES", "requisitos": ["S2-04"]},
+                        {"codigo": "S3-05", "nombre": "PROBABILIDAD Y ESTADISTICA", "requisitos": ["S2-05"]},
+                        {"codigo": "S3-06", "nombre": "CONTABILIDAD INDUSTRIAL", "requisitos": ["S2-06"]}
+                    ]
+                },
+                {
+                    "numero": 4,
+                    "cursos": [
+                        {"codigo": "S4-01", "nombre": "TERMODINAMICA TECNICA", "requisitos": ["S3-01"]},
+                        {"codigo": "S4-02", "nombre": "RESISTENCIA DE LOS MATERIALES", "requisitos": ["S3-02", "S3-03"]},
+                        {"codigo": "S4-03", "nombre": "NORMAS LEGALES", "requisitos": ["S3-04"]},
+                        {"codigo": "S4-04", "nombre": "ESTADISTICA MATEMATICA", "requisitos": ["S3-05"]},
+                        {"codigo": "S4-05", "nombre": "MERCADOTECNIA INDUSTRIAL", "requisitos": ["S3-06"]}
+                    ]
+                },
+                {
+                    "numero": 5,
+                    "cursos": [
+                        {"codigo": "S5-01", "nombre": "MAQUINAS TERMICAS", "requisitos": ["S4-01"]},
+                        {"codigo": "S5-02", "nombre": "TECNOLOGIA MECANICA", "requisitos": ["S4-02"]},
+                        {"codigo": "S5-03", "nombre": "ELECTROTECNIA INDUSTRIAL I", "requisitos": ["S3-03"]},
+                        {"codigo": "S5-04", "nombre": "METODOLOGIA DE LA INVESTIGACION", "requisitos": ["S4-03", "S4-04"]},
+                        {"codigo": "S5-05", "nombre": "INVESTIGACION OPERATIVA I", "requisitos": ["S4-04"]},
+                        {"codigo": "S5-06", "nombre": "ADMINISTRACION INDUSTRIAL", "requisitos": ["S4-05"]}
+                    ]
+                },
+                {
+                    "numero": 6,
+                    "cursos": [
+                        {"codigo": "S6-01", "nombre": "OPERACIONES UNITARIAS I", "requisitos": ["S5-01"]},
+                        {"codigo": "S6-02", "nombre": "ELEMENTOS DE MAQUINAS", "requisitos": ["S5-02", "S5-03"]},
+                        {"codigo": "S6-03", "nombre": "ELECTIVA I", "requisitos": ["S5-03", "S4-03"]},
+                        {"codigo": "S6-04", "nombre": "GESTION DE TALENTO", "requisitos": ["S5-04"]},
+                        {"codigo": "S6-05", "nombre": "INVESTIGACION OPERATIVA II", "requisitos": ["S5-05"]},
+                        {"codigo": "S6-06", "nombre": "INGENIERIA DE METODOS", "requisitos": ["S5-06", "S5-04"]}
+                    ]
+                },
+                {
+                    "numero": 7,
+                    "cursos": [
+                        {"codigo": "S7-01", "nombre": "OPERACIONES UNITARIAS II", "requisitos": ["S6-01"]},
+                        {"codigo": "S7-02", "nombre": "CONTROL AUTOMATICO", "requisitos": ["S6-02"]},
+                        {"codigo": "S7-03", "nombre": "HIGIENE Y SEGURIDAD INDUSTRIAL", "requisitos": ["S6-03", "S6-02"]},
+                        {"codigo": "S7-04", "nombre": "FINANZAS PARA LA INGENIERIA", "requisitos": ["S6-04"]},
+                        {"codigo": "S7-05", "nombre": "PLANIFICACION CONTROL DE PRODUCCION I", "requisitos": ["S6-05"]},
+                        {"codigo": "S7-06", "nombre": "COSTOS INDUSTRIALES I", "requisitos": ["S6-06"]}
+                    ]
+                },
+                {
+                    "numero": 8,
+                    "cursos": [
+                        {"codigo": "S8-01", "nombre": "PROCESOS INDUSTRIALES", "requisitos": ["S7-01"]},
+                        {"codigo": "S8-02", "nombre": "MEDIO AMBIENTE EN LA INDUSTRIA", "requisitos": ["S7-02"]},
+                        {"codigo": "S8-03", "nombre": "MANTENIMIENTO E INTALACIONES INDUSTRIALES", "requisitos": ["S7-03"]},
+                        {"codigo": "S8-04", "nombre": "PREPARACION Y EVALUACION DE PROYECTO", "requisitos": ["S7-04"]},
+                        {"codigo": "S8-05", "nombre": "PLANIFICACION CONTROL DE PRODUCCION II", "requisitos": ["S7-05"]},
+                        {"codigo": "S8-06", "nombre": "COSTOS INDUSTRIALES II", "requisitos": ["S7-06"]}
+                    ]
+                },
+                {
+                    "numero": 9,
+                    "cursos": [
+                        {"codigo": "S9-01", "nombre": "CONTROL DE CALIDAD", "requisitos": ["S8-01"]},
+                        {"codigo": "S9-02", "nombre": "ELECTIVA II", "requisitos": ["S8-02", "S7-03"]},
+                        {"codigo": "S9-03", "nombre": "TECNOLOGIAS AVANZADAS", "requisitos": ["S8-03"]},
+                        {"codigo": "S9-04", "nombre": "EMPRENDEDURISMO E INNOVACION", "requisitos": ["S8-04"]},
+                        {"codigo": "S9-05", "nombre": "LOGISTICA", "requisitos": ["S8-05"]},
+                        {"codigo": "S9-06", "nombre": "PLANEACION ESTRATEGICA", "requisitos": ["S8-06", "S8-05"]}
+                    ]
+                },
+                {
+                    "numero": 10,
+                    "cursos": [
+                        {"codigo": "S10-01", "nombre": "PRACTICAS INDUSTRIALES", "requisitos": ["S9-01", "S9-02", "S9-03", "S9-04", "S9-05", "S9-06"]}
+                    ]
+                }
+            ]
+        };
+
+        // Referencias a elementos del DOM
+        const loginSection = document.getElementById('login-section');
+        const mallaSection = document.getElementById('malla-section');
+        const ruInput = document.getElementById('ru-input');
+        const loginBtn = document.getElementById('login-btn');
+        const changeUserBtn = document.getElementById('change-user');
+        const currentRuSpan = document.getElementById('current-ru');
+        const currentUserSpan = document.getElementById('current-user');
+        const mallaContainer = document.getElementById('malla-container');
+        
+        // Estado actual
+        let currentRu = '';
+        let userStates = {};
+        
+        // Eventos
+        loginBtn.addEventListener('click', handleLogin);
+        changeUserBtn.addEventListener('click', handleChangeUser);
+        
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', () => {
+            // Verificar si hay un usuario guardado
+            const savedRu = localStorage.getItem('currentRu');
+            if (savedRu) {
+                ruInput.value = savedRu;
+                handleLogin();
+            }
+        });
+        
+        // Manejar el inicio de sesión
+        function handleLogin() {
+            const ru = ruInput.value.trim();
+            
+            if (!ru || ru.length !== 8) {
+                alert('Por favor ingresa un RU válido de 8 dígitos.');
+                return;
+            }
+            
+            currentRu = ru;
+            currentRuSpan.textContent = ru;
+            currentUserSpan.textContent = `Estudiante ${ru}`;
+            
+            // Cargar estados guardados
+            loadUserStates();
+            
+            // Construir la malla curricular
+            buildMalla();
+            
+            // Mostrar la sección de malla y ocultar el login
+            loginSection.style.display = 'none';
+            mallaSection.style.display = 'block';
+            
+            // Guardar el RU actual
+            localStorage.setItem('currentRu', ru);
+        }
+        
+        // Cambiar de usuario
+        function handleChangeUser() {
+            // Limpiar el input
+            ruInput.value = '';
+            
+            // Mostrar login y ocultar malla
+            mallaSection.style.display = 'none';
+            loginSection.style.display = 'block';
+            
+            // Quitar el foco del botón
+            changeUserBtn.blur();
+            
+            // Enfocar el input
+            ruInput.focus();
+        }
+        
+        // Cargar estados del usuario desde localStorage
+        function loadUserStates() {
+            const savedStates = localStorage.getItem(`mallaStates_${currentRu}`);
+            userStates = savedStates ? JSON.parse(savedStates) : {};
+        }
+        
+        // Guardar estados del usuario en localStorage
+        function saveUserStates() {
+            localStorage.setItem(`mallaStates_${currentRu}`, JSON.stringify(userStates));
+        }
+        
+        // Construir la malla curricular
+        function buildMalla() {
+            mallaContainer.innerHTML = '';
+            
+            materiasData.semestres.forEach(semestre => {
+                const semesterDiv = document.createElement('div');
+                semesterDiv.className = 'semester';
+                
+                const headerDiv = document.createElement('div');
+                headerDiv.className = 'semester-header';
+                headerDiv.innerHTML = `
+                    <h3>Semestre ${semestre.numero}</h3>
+                    <span>${semestre.cursos.length} curso${semestre.cursos.length > 1 ? 's' : ''}</span>
+                `;
+                
+                const coursesGrid = document.createElement('div');
+                coursesGrid.className = 'courses-grid';
+                
+                semestre.cursos.forEach(curso => {
+                    const courseCard = document.createElement('div');
+                    courseCard.className = 'course-card';
+                    courseCard.dataset.code = curso.codigo;
+                    
+                    // Estado actual del curso
+                    const estado = userStates[curso.codigo] || 'pending';
+                    courseCard.classList.add(estado);
+                    
+                    let requisitosHTML = '';
+                    if (curso.requisitos && curso.requisitos.length > 0) {
+                        requisitosHTML = `<p class="course-req">Requisitos: ${curso.requisitos.join(', ')}</p>`;
+                    }
+                    
+                    courseCard.innerHTML = `
+                        <h3>${curso.nombre}</h3>
+                        <p class="course-code">${curso.codigo}</p>
+                        ${requisitosHTML}
+                        <span class="course-state">${getEstadoText(estado)}</span>
+                    `;
+                    
+                    // Evento para cambiar estado
+                    courseCard.addEventListener('click', () => {
+                        changeCourseState(courseCard, curso.codigo);
+                    });
+                    
+                    coursesGrid.appendChild(courseCard);
+                });
+                
+                semesterDiv.appendChild(headerDiv);
+                semesterDiv.appendChild(coursesGrid);
+                mallaContainer.appendChild(semesterDiv);
+            });
+        }
+        
+        // Cambiar el estado de un curso
+        function changeCourseState(courseCard, codigo) {
+            const estados = ['pending', 'approved', 'failed'];
+            const currentEstado = estados.find(e => courseCard.classList.contains(e)) || 'pending';
+            const currentIndex = estados.indexOf(currentEstado);
+            const nextIndex = (currentIndex + 1) % estados.length;
+            const nextEstado = estados[nextIndex];
+            
+            // Eliminar clases de estado anteriores
+            courseCard.classList.remove('pending', 'approved', 'failed');
+            
+            // Añadir nuevo estado
+            courseCard.classList.add(nextEstado);
+            
+            // Actualizar texto del estado
+            const stateSpan = courseCard.querySelector('.course-state');
+            if (stateSpan) {
+                stateSpan.textContent = getEstadoText(nextEstado);
+            }
+            
+            // Actualizar estado en memoria
+            userStates[codigo] = nextEstado;
+            
+            // Guardar cambios
+            saveUserStates();
+        }
+        
+        // Obtener texto para el estado
+        function getEstadoText(estado) {
+            switch(estado) {
+                case 'pending': return 'Pendiente';
+                case 'approved': return 'Aprobada';
+                case 'failed': return 'Aplazada';
+                default: return 'Pendiente';
+            }
+        }
+    </script>
+</body>
+</html>
